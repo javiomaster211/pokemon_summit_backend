@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6", // or a later version like es2017
+    "module": "commonjs",
+    "outDir": "./dist", // compiled js files
+    "rootDir": "./src", // your TypeScript files
+    "strict": true, // enable all strict type-checking options
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "public"]
+}

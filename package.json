@@ -1,0 +1,37 @@
+{
+  "name": "pokemon_tournament",
+  "version": "1.0.0",
+  "description": "fun project to create pokemon battle tournaments online with friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec ts-node src/server.ts"
+  },
+  "keywords": [
+    "pokemon",
+    "tournament"
+  ],
+  "author": "Javier Rodríguez Bueno",
+  "license": "ISC",
+  "dependencies": {
+    "@types/passport-google-oauth20": "^2.0.14",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^20.11.24",
+    "@types/passport": "^1.0.16",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
