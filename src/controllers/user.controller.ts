@@ -1,4 +1,4 @@
-import User from '../../models/user/user.model';
+import User from '../models/user/user.model';
 import { Request, Response } from 'express';
 
 function register(req: Request, res: Response) {
@@ -6,7 +6,6 @@ function register(req: Request, res: Response) {
   user
     .save()
     .then((doc) => {
-      console.log('User created:', doc);
       return res.json(doc);
     })
     .catch((err) => {

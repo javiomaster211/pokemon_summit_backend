@@ -1,52 +1,47 @@
-import mongoose, { Document } from 'mongoose';
-
+import mongoose from 'mongoose';
+import { IUser } from '../../types/interfaces';
+import bcrypt from 'bcrypt';
 const Schema = mongoose.Schema;
-
-type TrainerStats = {
-  wins: Number;
-  loses: Number;
-  elo: Number;
-};
-
-interface IUser extends Document {
-  img: string;
-  name: string;
-  username: string;
-  friend_code: string; // Since friend-code includes a hyphen, it needs to be quoted.
-  pkmn_teams: Array<String>; // Assuming these are references to other documents.
-  fav_pkmn: string;
-  email: string;
-  password: string; // It's a good practice not to store plain text passwords. Consider storing a hashed version.
-  //tournaments: mongoose.Types.ObjectId[];
-  stats: TrainerStats;
-  creation_date: Date;
-  last_connection: Date;
-}
-
 const UserSchema = new Schema<IUser>(
   {
-    img: { type: String, required: true },
-    name: { type: String, required: true },
+    img: { type: String, default: '' },
+    name: { type: String, default: '' },
     username: { type: String, required: true },
-    friend_code: { type: String, required: true },
+    friend_code: { type: String, default: '' },
     pkmn_teams: {
-      type: [{ type: String, ref: 'pokemon_team' }],
+      type: [{ type: String }],
       validate: {
         validator: Array.isArray,
         message: (props) => `${props.path} must be an array`,
       },
+      default: [],
     },
-    fav_pkmn: { type: String, required: true },
+    fav_pkmn: { type: String, default: '#1' },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, default: '' },
     //tournaments: [],
-    stats: { type: Object },
+    stats: { type: Object, default: {} },
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const User = mongoose.model<IUser>('User', UserSchema);
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  await bcrypt.hash(this.password, salt).then((r) => (this.password = r));
+});
 
+UserSchema.methods.checkPassword = async function (formPassword: string) {
+  return await bcrypt.compare(formPassword, this.password);
+};
+
+const User = mongoose.model<IUser>('User', UserSchema);
 export default User;

@@ -1,4 +1,4 @@
-import dbConnection from './config/database';
+import dbConnection from './config/database.config';
 import https from 'https';
 import app from './app';
 import fs from 'fs';
