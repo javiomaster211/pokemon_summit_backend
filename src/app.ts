@@ -10,9 +10,6 @@ import authRouter from './routes/auth.router';
 import GOOGLE_AUTH_OPTIONS from './constants/GOOGLE_AUTH_OPTIONS';
 require('dotenv').config();
 
-// TODO envio de emails de confirmacion
-// TODO register endpoint
-
 // Config & Security
 const app = express();
 app.use(express.json());
@@ -27,7 +24,6 @@ app.use(
 configurePassport(GOOGLE_AUTH_OPTIONS, {
   usernameField: 'username',
   passwordField: 'password',
-  session: false,
 });
 app.use(passport.initialize());
 

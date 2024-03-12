@@ -1,5 +1,6 @@
 import { TrainerStats } from './types';
 import { Schema } from 'mongoose';
+
 interface IUser extends Document {
   _id: Schema.Types.ObjectId;
   img: string;
@@ -13,6 +14,8 @@ interface IUser extends Document {
   //tournaments: mongoose.Types.ObjectId[];
   stats: TrainerStats;
   confirmed: boolean;
+  confirm_token: string;
+  role: string;
   checkPassword: (password: string) => Promise<boolean>;
 }
 

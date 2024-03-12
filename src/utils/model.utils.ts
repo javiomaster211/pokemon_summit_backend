@@ -21,4 +21,10 @@ const newGoogleUser = async (userInfo: Profile): Promise<IUser> => {
   return user;
 };
 
-export { newGoogleUser };
+const generateConfirmToken = (): string => {
+  let a = Math.random().toString(32).substring(2);
+  let b = Date.now().toString(32);
+  return a + b;
+};
+
+export { newGoogleUser, generateConfirmToken };

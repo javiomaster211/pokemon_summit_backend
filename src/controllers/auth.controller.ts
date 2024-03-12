@@ -26,9 +26,18 @@ const localAuthentication = (
   res: Response,
   next: NextFunction
 ) => {
-  passport.authenticate('local', {
-    session: false,
-  })(req, res, next);
+  passport.authenticate(
+    'local',
+    {
+      session: false,
+    },
+    (error: any, authResult: any) => {
+      if (error) {
+        return res.json(error);
+      }
+      return res.json(authResult);
+    }
+  )(req, res, next);
 };
 
 export {

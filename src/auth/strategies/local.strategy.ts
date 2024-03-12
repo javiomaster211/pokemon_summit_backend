@@ -32,7 +32,8 @@ const localStrategyConfig = (
           }
           // Send user + loginToken
           const loginToken = jwtSignToken(user._id.toString(), '24h');
-          return done(undefined, { ...user, loginToken });
+
+          return done(undefined, { user, loginToken });
         } catch (err: any) {
           const error = new Error('There was an error');
           return done(error.message, undefined);

@@ -25,6 +25,9 @@ const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    role: { type: String, default: 'user' },
+
+    confirm_token: { type: String, default: '' },
   },
   {
     timestamps: true,

@@ -4,4 +4,6 @@ type TrainerStats = {
   elo: Number;
 };
 
+// Mongoose schema
+
 export { TrainerStats };
