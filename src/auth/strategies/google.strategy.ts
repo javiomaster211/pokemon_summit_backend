@@ -1,16 +1,22 @@
+// Imports
 import {
   Strategy as GoogleStrategy,
   Profile,
   StrategyOptions,
   VerifyCallback,
 } from 'passport-google-oauth20';
-import User from '../../models/user/user.model';
-import { jwtSignToken } from '../../utils/jwt.utils';
-import { newGoogleUser } from '../../utils/model.utils';
 import { PassportStatic } from 'passport';
-import { IUser } from '../../types/interfaces';
 
-// Google auth strategy
+import { ITrainer } from '../../types/Trainer';
+const { jwtSignToken } = require('../../helpers/jwt.helpers');
+const { newGoogleTrainer } = require('../../helpers/model.helpers');
+const { PassportStatic } = require('passport');
+
+/**
+ * Implements OAuth2.0 google strategy (no session)
+ * @param passport PassportStatic
+ * @param strategy StrategyOptions
+ */
 const googleStrategyConfig = (
   passport: PassportStatic,
   options: StrategyOptions
@@ -26,22 +32,31 @@ const googleStrategyConfig = (
       ) => {
         try {
           // Avoiding duplicate fields
-          const email = profile.emails?.[0].value;
+          const email: string | undefined = profile.emails?.[0].value;
           if (!email) {
-            const error = new Error('Email not available from google profile');
+            const error: Error = new Error(
+              'Email not available from google profile'
+            );
             return done(error.message, undefined);
           }
-          let user: IUser = await newGoogleUser(profile);
-          // Check if user is confirmed
-          if (!user?.confirmed) {
+
+          // Create new Trainer instance
+          let Trainer: ITrainer = await newGoogleTrainer(profile);
+
+          // Check if Trainer is confirmed
+          if (!Trainer?.confirmed) {
             const error: Error = new Error('confirm_your_account');
             return done(error.message, undefined);
           }
-          // Send user + loginToken
-          const loginToken = jwtSignToken(user._id.toString(), '24h');
-          return done(undefined, { ...user, loginToken });
+
+          // Send Trainer + loginToken
+          const loginToken: string = jwtSignToken(
+            Trainer._id.toString(),
+            '24h'
+          );
+          return done(undefined, { ...Trainer, loginToken });
         } catch (err: unknown) {
-          const error = new Error('There was an error');
+          const error: Error = new Error('unexpected_error');
           return done(error.message, undefined);
         }
       }

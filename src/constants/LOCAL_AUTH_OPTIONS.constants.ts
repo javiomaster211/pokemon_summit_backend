@@ -1,4 +1,6 @@
+// Imports
 import { ExtractJwt } from 'passport-jwt';
+
 require('dotenv').config();
 
 const LOCAL_AUTH_OPTIONS = {

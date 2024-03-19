@@ -1,40 +1,39 @@
+// Imports
 import mongoose from 'mongoose';
-import { IUser } from '../../types/interfaces';
+import { ITrainer } from '../types/Trainer';
 import bcrypt from 'bcrypt';
 const Schema = mongoose.Schema;
-const UserSchema = new Schema<IUser>(
+
+/**
+ * Trainer DOC mongoose schema
+ * @extends ITrainer
+ */
+const TrainerSchema = new Schema<ITrainer>(
   {
     img: { type: String, default: '' },
     name: { type: String, default: '' },
     username: { type: String, required: true },
-    friend_code: { type: String, default: '' },
-    pkmn_teams: {
-      type: [{ type: String }],
-      validate: {
-        validator: Array.isArray,
-        message: (props) => `${props.path} must be an array`,
+    pkmn_teams: [
+      {
+        type: String,
       },
-      default: [],
-    },
-    fav_pkmn: { type: String, default: '#1' },
+    ],
     email: { type: String, required: true, unique: true },
     password: { type: String, default: '' },
-    //tournaments: [],
     stats: { type: Object, default: {} },
     confirmed: {
       type: Boolean,
       default: false,
     },
-    role: { type: String, default: 'user' },
-
     confirm_token: { type: String, default: '' },
+    role: { type: String, default: 'Trainer' },
   },
   {
     timestamps: true,
   }
 );
 
-UserSchema.pre('save', async function (next) {
+TrainerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     next();
   }
@@ -42,9 +41,9 @@ UserSchema.pre('save', async function (next) {
   await bcrypt.hash(this.password, salt).then((r) => (this.password = r));
 });
 
-UserSchema.methods.checkPassword = async function (formPassword: string) {
+TrainerSchema.methods.checkPassword = async function (formPassword: string) {
   return await bcrypt.compare(formPassword, this.password);
 };
 
-const User = mongoose.model<IUser>('User', UserSchema);
-export default User;
+const Trainer = mongoose.model<ITrainer>('Trainer', TrainerSchema);
+export default Trainer;

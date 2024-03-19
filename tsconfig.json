@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es6", // or a later version like es2017
-    "module": "commonjs",
-    "outDir": "./dist", // compiled js files
-    "rootDir": "./src", // your TypeScript files
-    "strict": true, // enable all strict type-checking options
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "lib": ["ESNext", "DOM"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "public"]
+  "exclude": ["node_modules", "dist"]
 }

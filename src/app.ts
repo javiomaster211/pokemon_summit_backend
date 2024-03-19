@@ -1,13 +1,18 @@
 // Imports
 import express from 'express';
-import userRouter from './routes/user.router';
+import trainerRouter from './routes/trainer.router';
 import passport from 'passport';
 import configurePassport from './auth/passport';
 import cors from 'cors';
 import path from 'path';
-import helmet from 'helmet';
+import helmet from '../node_modules/helmet/index.cjs';
 import authRouter from './routes/auth.router';
 import GOOGLE_AUTH_OPTIONS from './constants/GOOGLE_AUTH_OPTIONS';
+import tournamentRouter from './routes/tournament.router';
+import organizationRouter from './routes/organization.router';
+import emailRouter from './routes/email.router';
+
+// Load .dotenv file
 require('dotenv').config();
 
 // Config & Security
@@ -20,7 +25,7 @@ app.use(
   })
 );
 
-// Auth
+// Auth strategies
 configurePassport(GOOGLE_AUTH_OPTIONS, {
   usernameField: 'username',
   passwordField: 'password',
@@ -31,8 +36,11 @@ app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'views')));
 
 // Routes
-app.use(userRouter);
+app.use(trainerRouter);
 app.use(authRouter);
+app.use(tournamentRouter);
+app.use(organizationRouter);
+app.use(emailRouter);
 
 // Root
 app.get('/', (req, res) => {

@@ -1,9 +1,14 @@
+// Imports
 import { IStrategyOptions, Strategy as LocalStrategy } from 'passport-local';
-import passport, { PassportStatic } from 'passport';
-import User from '../../models/user/user.model';
+import { PassportStatic } from 'passport';
+import Trainer from '../../models/Trainer';
+import { jwtSignToken } from '../../helpers/jwt.helpers';
 
-import { jwtSignToken } from '../../utils/jwt.utils';
-
+/**
+ * Implements OAuth local strategy (no session)
+ * @param passport PassportStatic
+ * @param options StrategyOptions
+ */
 const localStrategyConfig = (
   passport: PassportStatic,
   options: IStrategyOptions
@@ -14,27 +19,34 @@ const localStrategyConfig = (
       { usernameField, passwordField },
       async (username: string, password: string, done) => {
         try {
-          let user = await User.findOne({ username });
-          // Check if user exists
-          if (!user) {
-            const error: Error = new Error('user_not_exists');
+          let trainer = await Trainer.findOne({ username });
+          // Check if Trainer exists
+          if (!trainer) {
+            const error: Error = new Error('Trainer_not_exists');
             return done(error.message, undefined);
           }
-          const isPasswordValid = await user?.checkPassword(password);
+          // Checks for password match
+          const isPasswordValid: boolean = await trainer?.checkPassword(
+            password
+          );
           if (!isPasswordValid) {
             const error: Error = new Error('wrong_password');
             return done(error.message, undefined);
           }
-          // Check if user is confirmed
-          if (!user?.confirmed) {
+
+          // Check if Trainer is confirmed
+          if (!trainer?.confirmed) {
             const error: Error = new Error('confirm_your_account');
             return done(error.message, undefined);
           }
-          // Send user + loginToken
-          const loginToken = jwtSignToken(user._id.toString(), '24h');
 
-          return done(undefined, { user, loginToken });
-        } catch (err: any) {
+          // Send Trainer + loginToken
+          const loginToken: string = jwtSignToken(
+            trainer._id.toString(),
+            '24h'
+          );
+          return done(undefined, { trainer, loginToken });
+        } catch (err: unknown) {
           const error = new Error('There was an error');
           return done(error.message, undefined);
         }
